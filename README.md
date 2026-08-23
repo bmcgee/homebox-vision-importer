@@ -44,7 +44,7 @@ version: "3.8"
 services:
   homebox-vision-importer:
     image: homebox-vision-importer:latest
-    build: https://github.com/your-username/homebox-vision-importer.git # Or build from local directory
+    build: https://github.com/bmcgee/homebox-vision-importer.git # Or build from local directory
     container_name: homebox-vision-importer
     ports:
       - "8082:8000"
