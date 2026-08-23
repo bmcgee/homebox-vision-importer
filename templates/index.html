@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Custom scrollbar for better look */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -37,28 +36,33 @@
                     <p class="text-xs text-slate-400">Homelab AI Inventory Importer</p>
                 </div>
             </div>
-            <div id="status-badge" class="flex items-center space-x-2 bg-slate-800 px-3 py-1.5 rounded-full text-xs text-slate-300 border border-slate-700">
-                <span class="h-2 w-2 rounded-full bg-yellow-500 animate-pulse" id="status-dot"></span>
-                <span id="status-text">Checking API...</span>
+            <div class="flex items-center space-x-3">
+                <div id="status-badge" class="flex items-center space-x-2 bg-slate-800 px-3 py-1.5 rounded-full text-xs text-slate-300 border border-slate-700">
+                    <span class="h-2 w-2 rounded-full bg-yellow-500 animate-pulse" id="status-dot"></span>
+                    <span id="status-text">Checking API...</span>
+                </div>
+                <button id="settings-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 p-2 rounded-lg transition-colors" title="Settings">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="flex-grow max-w-6xl w-full mx-auto p-4 sm:p-6 space-y-6">
-        <!-- Settings Modal / Banner (Collapsible) -->
+        <!-- Configuration Alert Banner -->
         <div id="config-banner" class="hidden bg-yellow-950/40 border border-yellow-800/50 rounded-xl p-4 flex items-start space-x-3">
             <i class="fa-solid fa-triangle-exclamation text-yellow-500 text-xl mt-0.5"></i>
             <div class="flex-grow">
                 <h3 class="text-sm font-semibold text-yellow-200">Missing Configuration</h3>
-                <p class="text-xs text-yellow-300/80 mt-1">Please ensure your <code>HOMEBOX_URL</code>, <code>HOMEBOX_API_KEY</code>, and LLM API keys are set in your environment variables.</p>
+                <p class="text-xs text-yellow-300/80 mt-1">Please configure your Homebox URL, Homebox API Key, and at least one AI API key. Click the gear icon in the header to open settings.</p>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            <!-- Left Panel: Upload and Options (2 Cols) -->
+            <!-- Left Panel: Setup and Camera (2 Cols) -->
             <div class="lg:col-span-2 space-y-6">
-                <!-- Location & Options -->
+                <!-- Target Setup -->
                 <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
                     <h2 class="text-lg font-semibold text-white flex items-center space-x-2">
                         <i class="fa-solid fa-sliders text-indigo-500"></i>
@@ -93,18 +97,17 @@
                     </div>
                 </div>
 
-                <!-- Photo Capture / Upload -->
+                <!-- Camera / Upload -->
                 <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
                     <h2 class="text-lg font-semibold text-white flex items-center space-x-2">
                         <i class="fa-solid fa-camera text-indigo-500"></i>
                         <span>2. Capture Photo</span>
                     </h2>
 
-                    <!-- Hidden File Inputs -->
+                    <!-- Inputs -->
                     <input type="file" id="file-input" accept="image/*" class="hidden">
                     <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden">
 
-                    <!-- Drag & Drop Area -->
                     <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-xl p-8 text-center cursor-pointer transition-all bg-slate-900/50 flex flex-col items-center justify-center min-h-[220px]">
                         <div id="drop-zone-prompt" class="space-y-4">
                             <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-500"></i>
@@ -123,7 +126,6 @@
                             </div>
                         </div>
                         
-                        <!-- Image Preview -->
                         <div id="image-preview-container" class="hidden w-full space-y-3">
                             <img id="image-preview" src="#" alt="Preview" class="max-h-[300px] w-auto mx-auto rounded-lg border border-slate-700 shadow-md object-contain">
                             <div class="flex justify-center space-x-2">
@@ -134,7 +136,6 @@
                         </div>
                     </div>
 
-                    <!-- Action Button -->
                     <button id="analyze-btn" disabled class="w-full bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed text-white font-medium py-2.5 rounded-lg transition-all shadow-md flex items-center justify-center space-x-2">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
                         <span>Analyze & Identify Items</span>
@@ -142,7 +143,7 @@
                 </div>
             </div>
 
-            <!-- Right Panel: AI Results & Import (3 Cols) -->
+            <!-- Right Panel: Results & Import (3 Cols) -->
             <div class="lg:col-span-3 space-y-6">
                 <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 shadow-xl min-h-[400px] flex flex-col justify-between">
                     <div>
@@ -173,11 +174,11 @@
                             <i class="fa-solid fa-receipt text-5xl text-slate-700"></i>
                             <div>
                                 <p class="text-sm font-medium">No items detected yet</p>
-                                <p class="text-xs text-slate-600 mt-1">Choose a location, snap a picture, and click analyze.</p>
+                                <p class="text-xs text-slate-600 mt-1">Select a location, upload a picture, and click analyze.</p>
                             </div>
                         </div>
 
-                        <!-- Table Grid of Items -->
+                        <!-- Table Grid -->
                         <div id="results-table-container" class="hidden overflow-x-auto">
                             <table class="w-full text-left border-collapse text-sm">
                                 <thead>
@@ -191,14 +192,12 @@
                                         <th class="py-3 px-2 w-10 text-center"></th>
                                     </tr>
                                 </thead>
-                                <tbody id="results-table-body" class="divide-y divide-slate-850">
-                                    <!-- Dynamic rows go here -->
-                                </tbody>
+                                <tbody id="results-table-body" class="divide-y divide-slate-850"></tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- Import Actions Block -->
+                    <!-- Import Actions -->
                     <div id="import-actions" class="hidden mt-6 pt-4 border-t border-slate-800 space-y-4">
                         <div class="flex justify-between text-xs text-slate-400">
                             <span>Selected: <strong class="text-slate-200" id="selected-count">0</strong> items</span>
@@ -214,9 +213,84 @@
         </div>
     </main>
 
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-gears text-indigo-500"></i>
+                    <span>App Configurations</span>
+                </h3>
+                <button id="close-settings-btn" class="text-slate-400 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Form Body -->
+            <div class="p-6 space-y-4 overflow-y-auto max-h-[70vh]">
+                <!-- Homebox URL -->
+                <div>
+                    <label for="cfg-url" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Homebox Base URL</label>
+                    <input type="text" id="cfg-url" placeholder="http://192.168.1.216:3100" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                </div>
+
+                <!-- Homebox API Key -->
+                <div>
+                    <label for="cfg-token" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Homebox API Key (hb_...)</label>
+                    <input type="password" id="cfg-token" placeholder="Leave empty to keep existing key" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                </div>
+
+                <!-- LLM Provider -->
+                <div>
+                    <label for="cfg-provider" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Default AI Provider</label>
+                    <select id="cfg-provider" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                        <option value="gemini">Google Gemini</option>
+                        <option value="claude">Anthropic Claude</option>
+                    </select>
+                </div>
+
+                <!-- Gemini API Key -->
+                <div>
+                    <label for="cfg-gemini-key" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Gemini API Key</label>
+                    <input type="password" id="cfg-gemini-key" placeholder="Leave empty to keep existing key" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                </div>
+
+                <!-- Claude API Key -->
+                <div>
+                    <label for="cfg-claude-key" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Claude API Key</label>
+                    <input type="password" id="cfg-claude-key" placeholder="Leave empty to keep existing key" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                </div>
+
+                <!-- Model configurations (Grid) -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="cfg-gemini-model" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Gemini Model</label>
+                        <input type="text" id="cfg-gemini-model" value="gemini-1.5-flash" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="cfg-claude-model" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Claude Model</label>
+                        <input type="text" id="cfg-claude-model" value="claude-3-5-sonnet-20240620" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 border-t border-slate-800 bg-slate-950/50 flex justify-end space-x-3">
+                <button id="cancel-settings-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-sm transition-colors">
+                    Cancel
+                </button>
+                <button id="save-settings-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center space-x-1">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    <span>Save Config</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-slate-950 border-t border-slate-800 py-4 px-6 text-center text-xs text-slate-500">
-        <p>Homebox Vision Importer — Powered by Gemini & Claude Vision</p>
+        <p>Homebox Vision Importer — Configurable Homelab Companion</p>
     </footer>
 
     <!-- Scripts -->
@@ -257,54 +331,67 @@
         const importActions = document.getElementById('import-actions');
         const importBtn = document.getElementById('import-btn');
 
+        // Settings Elements
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsModal = document.getElementById('settings-modal');
+        const closeSettingsBtn = document.getElementById('close-settings-btn');
+        const cancelSettingsBtn = document.getElementById('cancel-settings-btn');
+        const saveSettingsBtn = document.getElementById('save-settings-btn');
+        
+        const cfgUrl = document.getElementById('cfg-url');
+        const cfgToken = document.getElementById('cfg-token');
+        const cfgProvider = document.getElementById('cfg-provider');
+        const cfgGeminiKey = document.getElementById('cfg-gemini-key');
+        const cfgClaudeKey = document.getElementById('cfg-claude-key');
+        const cfgGeminiModel = document.getElementById('cfg-gemini-model');
+        const cfgClaudeModel = document.getElementById('cfg-claude-model');
+
         // Global State
         let base64Image = null;
         let locations = [];
         let itemTypes = [];
-        let detectedItems = [];
         let isModernVersion = false;
+        let backendConfig = {};
 
         // Initialize App
         document.addEventListener('DOMContentLoaded', () => {
-            checkConfigAndLoad();
+            loadConfigAndCheck();
             setupEventListeners();
         });
 
-        // Check Backend Config and Load Locations
-        async function checkConfigAndLoad() {
+        // Load Configuration and Check Status
+        async function loadConfigAndCheck() {
             try {
                 updateStatus('Checking config...', 'yellow');
                 const response = await fetch('/api/config');
-                const config = await response.json();
+                backendConfig = await response.json();
                 
-                // Show banner if not properly configured
-                if (!config.homebox_configured) {
+                // Show banner if Homebox details are empty
+                if (!backendConfig.homebox_configured) {
                     configBanner.classList.remove('hidden');
-                    updateStatus('Homebox disconnected', 'red');
-                    return;
+                    updateStatus('Needs Config', 'red');
                 } else {
                     configBanner.classList.add('hidden');
+                    updateStatus('Loading locations...', 'yellow');
+                    await fetchLocations();
                 }
 
-                if (config.llm_provider) {
-                    providerSelect.value = config.llm_provider;
+                // Sync provider select
+                if (backendConfig.llm_provider) {
+                    providerSelect.value = backendConfig.llm_provider;
                 }
-
-                updateStatus('Loading locations...', 'yellow');
-                await fetchLocations();
-                
             } catch (error) {
                 console.error('Initialization error:', error);
                 updateStatus('Connection failed', 'red');
             }
         }
 
-        // Fetch Locations from API
+        // Fetch Locations
         async function fetchLocations() {
             try {
                 const response = await fetch('/api/locations');
                 if (!response.ok) {
-                    throw new Error('Failed to load locations');
+                    throw new Error('Failed to load locations from API');
                 }
                 const data = await response.json();
                 
@@ -312,7 +399,6 @@
                 isModernVersion = data.version === 'modern';
                 itemTypes = data.item_types || [];
 
-                // Fill location select
                 locationSelect.innerHTML = '<option value="">-- Choose Location --</option>';
                 locations.forEach(loc => {
                     const opt = document.createElement('option');
@@ -321,7 +407,6 @@
                     locationSelect.appendChild(opt);
                 });
 
-                // Handle Entity/Item types if modern version
                 if (isModernVersion && itemTypes.length > 0) {
                     itemTypeContainer.classList.remove('hidden');
                     itemTypeSelect.innerHTML = '';
@@ -343,22 +428,29 @@
             }
         }
 
-        // Helper to update status dot
+        // Status badge state helper
         function updateStatus(text, color) {
             statusText.textContent = text;
             statusDot.className = 'h-2 w-2 rounded-full';
-            if (color === 'green') {
-                statusDot.classList.add('bg-green-500');
-            } else if (color === 'yellow') {
-                statusDot.classList.add('bg-yellow-500', 'animate-pulse');
-            } else if (color === 'red') {
-                statusDot.classList.add('bg-red-500');
-            }
+            if (color === 'green') statusDot.classList.add('bg-green-500');
+            else if (color === 'yellow') statusDot.classList.add('bg-yellow-500', 'animate-pulse');
+            else if (color === 'red') statusDot.classList.add('bg-red-500');
         }
 
-        // Setup Event Listeners
+        // Setup UI Event Listeners
         function setupEventListeners() {
-            // Refresh Locations
+            // Settings Modal Triggers
+            settingsBtn.addEventListener('click', openSettings);
+            closeSettingsBtn.addEventListener('click', closeSettings);
+            cancelSettingsBtn.addEventListener('click', closeSettings);
+            saveSettingsBtn.addEventListener('click', saveSettings);
+
+            // Close modal on background click
+            settingsModal.addEventListener('click', (e) => {
+                if (e.target === settingsModal) closeSettings();
+            });
+
+            // Reload Locations
             refreshLocationsBtn.addEventListener('click', async () => {
                 refreshLocationsBtn.disabled = true;
                 refreshLocationsBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i>';
@@ -367,105 +459,135 @@
                 refreshLocationsBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i>';
             });
 
-            // Browse button triggers file input
+            // File select triggers
             browseBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 fileInput.click();
             });
-
-            // Camera button triggers camera input
             cameraBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 cameraInput.click();
             });
-
-            // Drag & drop triggers click or file load
             dropZone.addEventListener('click', () => {
-                if (!base64Image) {
-                    fileInput.click();
-                }
+                if (!base64Image) fileInput.click();
             });
 
-            // File selectors change handler
             fileInput.addEventListener('change', handleFileSelect);
             cameraInput.addEventListener('change', handleFileSelect);
 
-            // Drag over events
+            // Drag & Drop
             dropZone.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 dropZone.classList.add('border-indigo-500', 'bg-slate-900');
             });
-
             dropZone.addEventListener('dragleave', () => {
                 dropZone.classList.remove('border-indigo-500', 'bg-slate-900');
             });
-
             dropZone.addEventListener('drop', (e) => {
                 e.preventDefault();
                 dropZone.classList.remove('border-indigo-500', 'bg-slate-900');
                 const file = e.dataTransfer.files[0];
-                if (file && file.type.startsWith('image/')) {
-                    processImage(file);
-                }
+                if (file && file.type.startsWith('image/')) processImage(file);
             });
 
-            // Clear image
             clearImageBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 resetImage();
             });
 
-            // Location selection update text in review block
-            locationSelect.addEventListener('change', () => {
-                updateImportButtonState();
-            });
-
-            // Analyze button trigger
+            locationSelect.addEventListener('change', updateImportButtonState);
             analyzeBtn.addEventListener('click', analyzePhoto);
 
-            // Add custom row
             addRowBtn.addEventListener('click', () => {
-                const newItem = {
-                    id: 'custom-' + Date.now(),
-                    name: 'New Item',
-                    quantity: 1,
-                    description: ''
-                };
+                const newItem = { id: 'custom-' + Date.now(), name: 'New Item', quantity: 1, description: '' };
                 addTableRow(newItem, true);
                 updateSelectedCount();
             });
 
-            // Bulk toggle checkboxes
             selectAllCheckbox.addEventListener('change', () => {
                 const checkboxes = resultsTableBody.querySelectorAll('input[type="checkbox"]');
                 checkboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
                 updateSelectedCount();
             });
 
-            // Import Trigger
             importBtn.addEventListener('click', importApprovedItems);
         }
 
-        // File Selection Handler
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (file) {
-                processImage(file);
+        // Open Settings Modal & Prefill values
+        function openSettings() {
+            cfgUrl.value = backendConfig.homebox_url || '';
+            cfgToken.value = backendConfig.has_homebox_api_key ? '********' : '';
+            cfgProvider.value = backendConfig.llm_provider || 'gemini';
+            cfgGeminiKey.value = backendConfig.has_gemini_api_key ? '********' : '';
+            cfgClaudeKey.value = backendConfig.has_anthropic_api_key ? '********' : '';
+            cfgGeminiModel.value = backendConfig.gemini_model || 'gemini-1.5-flash';
+            cfgClaudeModel.value = backendConfig.claude_model || 'claude-3-5-sonnet-20240620';
+            
+            settingsModal.classList.remove('hidden');
+        }
+
+        // Close Settings Modal
+        function closeSettings() {
+            settingsModal.classList.add('hidden');
+        }
+
+        // Save Settings to Backend
+        async function saveSettings() {
+            saveSettingsBtn.disabled = true;
+            saveSettingsBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> <span>Saving...</span>';
+
+            const settingsData = {
+                homebox_url: cfgUrl.value.trim(),
+                homebox_api_key: cfgToken.value,
+                llm_provider: cfgProvider.value,
+                gemini_api_key: cfgGeminiKey.value,
+                anthropic_api_key: cfgClaudeKey.value,
+                gemini_model: cfgGeminiModel.value.trim(),
+                claude_model: cfgClaudeModel.value.trim()
+            };
+
+            try {
+                const response = await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settingsData)
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.detail || 'Failed to save settings');
+                }
+
+                alert('Settings saved successfully!');
+                closeSettings();
+                
+                // Reload configuration and refresh dropdowns
+                await loadConfigAndCheck();
+                
+            } catch (error) {
+                console.error(error);
+                alert('Error saving config: ' + error.message);
+            } finally {
+                saveSettingsBtn.disabled = false;
+                saveSettingsBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Save Config</span>';
             }
         }
 
-        // Read and Resize/Compress Image to Base64
+        // File/Image processors
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) processImage(file);
+        }
+
         function processImage(file) {
             const reader = new FileReader();
             reader.onload = function(event) {
-                // To keep uploads fast and avoid token limits, we resize the image if it's too big
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
                     let width = img.width;
                     let height = img.height;
                     
-                    // Max width/height 1200px (ideal for Vision AI)
                     const max_dim = 1200;
                     if (width > max_dim || height > max_dim) {
                         if (width > height) {
@@ -484,12 +606,9 @@
                     
                     base64Image = canvas.toDataURL('image/jpeg', 0.85);
                     
-                    // Display preview
                     imagePreview.src = base64Image;
                     dropZonePrompt.classList.add('hidden');
                     imagePreviewContainer.classList.remove('hidden');
-                    
-                    // Enable analyze button
                     analyzeBtn.removeAttribute('disabled');
                 };
                 img.src = event.target.result;
@@ -497,7 +616,6 @@
             reader.readAsDataURL(file);
         }
 
-        // Reset Image state
         function resetImage() {
             base64Image = null;
             imagePreview.src = '#';
@@ -508,11 +626,10 @@
             cameraInput.value = '';
         }
 
-        // Run Image Analysis (Backend API)
+        // Analyze triggering
         async function analyzePhoto() {
             if (!base64Image) return;
 
-            // Toggle Loading UI
             emptyState.classList.add('hidden');
             resultsTableContainer.classList.add('hidden');
             importActions.classList.add('hidden');
@@ -523,12 +640,9 @@
             clearImageBtn.setAttribute('disabled', 'true');
 
             try {
-                // Send standard JSON request
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         image_base64: base64Image,
                         provider: providerSelect.value
@@ -541,10 +655,7 @@
                 }
 
                 const data = await response.json();
-                detectedItems = data.items || [];
-                
-                // Render table
-                renderTable(detectedItems);
+                renderTable(data.items || []);
                 
             } catch (error) {
                 console.error(error);
@@ -557,7 +668,7 @@
             }
         }
 
-        // Render Table Rows
+        // Render review table
         function renderTable(items) {
             resultsTableBody.innerHTML = '';
             
@@ -574,16 +685,13 @@
             importActions.classList.remove('hidden');
             addRowBtn.removeAttribute('disabled');
 
-            items.forEach((item, index) => {
-                addTableRow(item, true);
-            });
+            items.forEach(item => addTableRow(item, true));
 
             selectAllCheckbox.checked = true;
             updateSelectedCount();
             updateImportButtonState();
         }
 
-        // Add a single table row
         function addTableRow(item, isChecked = true) {
             const tr = document.createElement('tr');
             tr.className = 'hover:bg-slate-900/40 transition-colors border-b border-slate-800/50';
@@ -611,7 +719,6 @@
                 </td>
             `;
 
-            // Row Event Listeners
             const checkbox = tr.querySelector('.item-checkbox');
             checkbox.addEventListener('change', updateSelectedCount);
 
@@ -619,15 +726,12 @@
             deleteBtn.addEventListener('click', () => {
                 tr.remove();
                 updateSelectedCount();
-                if (resultsTableBody.children.length === 0) {
-                    renderTable([]);
-                }
+                if (resultsTableBody.children.length === 0) renderTable([]);
             });
 
             resultsTableBody.appendChild(tr);
         }
 
-        // Update selected elements count and location status
         function updateSelectedCount() {
             const checkedBoxes = resultsTableBody.querySelectorAll('.item-checkbox:checked');
             selectedCountSpan.textContent = checkedBoxes.length;
@@ -638,14 +742,12 @@
             updateImportButtonState();
         }
 
-        // Update Import button display based on selections
         function updateImportButtonState() {
             const locId = locationSelect.value;
             const checkedBoxes = resultsTableBody.querySelectorAll('.item-checkbox:checked');
             
             if (locId) {
-                const locName = locationSelect.options[locationSelect.selectedIndex].text;
-                selectedLocationSpan.textContent = locName;
+                selectedLocationSpan.textContent = locationSelect.options[locationSelect.selectedIndex].text;
             } else {
                 selectedLocationSpan.textContent = '-';
             }
@@ -659,7 +761,6 @@
             }
         }
 
-        // Gather checked items from UI table
         function getApprovedItems() {
             const rows = resultsTableBody.querySelectorAll('tr');
             const items = [];
@@ -677,23 +778,21 @@
             return items;
         }
 
-        // Import Items to Homebox API
         async function importApprovedItems() {
             const locationId = locationSelect.value;
             const itemTypeId = itemTypeSelect.value;
             const items = getApprovedItems();
 
             if (!locationId) {
-                alert('Please select a target location first!');
+                alert('Please select a target location!');
                 return;
             }
 
             if (items.length === 0) {
-                alert('Please select at least one item to import!');
+                alert('Please select items to import!');
                 return;
             }
 
-            // UI feedback
             importBtn.setAttribute('disabled', 'true');
             importBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> <span>Importing...</span>';
             refreshLocationsBtn.disabled = true;
@@ -701,9 +800,7 @@
             try {
                 const response = await fetch('/api/import', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         location_id: locationId,
                         item_type_id: itemTypeId || null,
@@ -714,10 +811,7 @@
                 const data = await response.json();
                 
                 if (response.ok) {
-                    // Success!
-                    alert(`Successfully imported ${data.imported_count} of ${data.total_count} items to Homebox!`);
-                    
-                    // Reset UI
+                    alert(`Imported ${data.imported_count} items!`);
                     renderTable([]);
                     resetImage();
                 } else {
@@ -732,16 +826,9 @@
             }
         }
 
-        // HTML escaping helper
         function escapeHtml(text) {
             if (!text) return '';
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            };
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
             return text.replace(/[&<>"']/g, m => map[m]);
         }
     </script>
