@@ -1,21 +1,30 @@
-FROM python:3.11-slim
+# Stage 1: Build Mobile-First Svelte Frontend
+FROM node:20-slim AS frontend-builder
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm ci
+COPY frontend/ ./
+RUN npm run build
 
+# Stage 2: Production Python FastAPI Backend
+FROM python:3.12-slim
 WORKDIR /app
 
-# Install system dependencies if any are needed
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# Install curl for healthchecks
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application files
+# Copy application files and built frontend dist
 COPY app.py .
 COPY templates/ templates/
+COPY --from=frontend-builder /app/frontend/dist /app/frontend/dist
 
-# Expose FastAPI port
+# Create persistent data volume directory
+RUN mkdir -p /data
+
 EXPOSE 8000
 
 # Run FastAPI app with Uvicorn

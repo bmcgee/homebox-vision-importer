@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --color-dracula-bg: #282a36;
+  --color-dracula-surface: #21222c;
+  --color-dracula-card: #21222c;
+  --color-dracula-border: #343746;
+  --color-dracula-selection: #44475a;
+  --color-dracula-pink: #ff79c6;
+  --color-dracula-pink-hover: #ff62ba;
+  --color-dracula-purple: #bd93f9;
+  --color-dracula-cyan: #8be9fd;
+  --color-dracula-green: #50fa7b;
+  --color-dracula-red: #ff5555;
+  --color-dracula-yellow: #f1fa8c;
+  --color-dracula-fg: #f8f8f2;
+  --color-dracula-comment: #6272a4;
+}
+
+body {
+  background-color: #282a36;
+  color: #f8f8f2;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom scrollbars matching Homebox */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #21222c;
+}
+::-webkit-scrollbar-thumb {
+  background: #343746;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #44475a;
+}

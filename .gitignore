@@ -1,0 +1,27 @@
+# Configuration & Secrets (Contains API keys and URLs)
+config.json
+.env
+*.env
+*.key
+*.pem
+
+# Python Virtual Environments & Caches
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# Node & Frontend Build Artifacts
+frontend/node_modules/
+frontend/dist/
+.npm/
+
+# Data volumes & local storage
+data/
+/data/
+
+# OS / Editor Files
+.DS_Store
+.vscode/
+.idea/

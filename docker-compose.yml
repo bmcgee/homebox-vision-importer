@@ -1,21 +1,22 @@
-version: "3.8"
+name: homebox-vision-importer
 
 services:
   homebox-vision-importer:
-    image: homebox-vision-importer:latest
     build: .
     container_name: homebox-vision-importer
     ports:
-      - "8082:8000"  # Expose on port 8082 to avoid conflicts with other homelab apps
+      - "8082:8000"
     restart: unless-stopped
     volumes:
-      - /mnt/data/homebox-vision-importer:/data
+      - homebox_importer_data:/data
     environment:
-      # Bootstrapping configurations (Optional - you can also configure this directly in the UI settings gear)
-      - HOMEBOX_URL=http://your-homebox-ip:7745
-      - HOMEBOX_API_KEY=hb_your_api_key_here
+      - HOMEBOX_URL=http://192.168.1.13:7745
+      - HOMEBOX_API_KEY=your_homebox_api_key_here
       - GEMINI_API_KEY=your_gemini_api_key_here
       - ANTHROPIC_API_KEY=your_anthropic_api_key_here
       - LLM_PROVIDER=gemini
-      - GEMINI_MODEL=gemini-1.5-flash
+      - GEMINI_MODEL=gemini-3.6-flash
       - CLAUDE_MODEL=claude-3-5-sonnet-20240620
+
+volumes:
+  homebox_importer_data:

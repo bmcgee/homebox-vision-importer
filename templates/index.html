@@ -104,25 +104,27 @@
                         <span>2. Capture Photo</span>
                     </h2>
 
-                    <!-- Inputs -->
-                    <input type="file" id="file-input" accept="image/*" class="hidden">
-                    <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden">
+                    <!-- Hidden inputs, driven by the <label for=...> buttons below -->
+                    <input type="file" id="file-input" accept="image/*" class="opacity-0 absolute -z-10 w-10 h-10">
+                    <input type="file" id="camera-input" accept="image/*" capture="environment" class="opacity-0 absolute -z-10 w-10 h-10">
 
-                    <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-xl p-8 text-center cursor-pointer transition-all bg-slate-900/50 flex flex-col items-center justify-center min-h-[220px]">
-                        <div id="drop-zone-prompt" class="space-y-4">
-                            <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-500"></i>
-                            <div>
-                                <p class="text-sm font-medium text-slate-300">Drag & drop photo here</p>
-                                <p class="text-xs text-slate-500 mt-1">or click to browse files</p>
-                            </div>
-                            <div class="flex justify-center space-x-2">
-                                <button type="button" id="browse-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded-md border border-slate-700 transition-colors">
+                    <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-xl p-8 text-center transition-all bg-slate-900/50 flex flex-col items-center justify-center min-h-[220px]">
+                        <div id="drop-zone-prompt" class="space-y-4 w-full">
+                            <label for="file-input" class="cursor-pointer block space-y-2">
+                                <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-500"></i>
+                                <div>
+                                    <p class="text-sm font-medium text-slate-300">Drag & drop photo here</p>
+                                    <p class="text-xs text-slate-500 mt-1">or click to browse files</p>
+                                </div>
+                            </label>
+                            <div class="flex justify-center space-x-2 pt-2">
+                                <label for="file-input" id="browse-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded-md border border-slate-700 transition-colors cursor-pointer inline-flex items-center justify-center">
                                     Browse Files
-                                </button>
-                                <button type="button" id="camera-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-1.5 rounded-md transition-colors flex items-center space-x-1">
+                                </label>
+                                <label for="camera-input" id="camera-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-1.5 rounded-md transition-colors flex items-center space-x-1 cursor-pointer inline-flex">
                                     <i class="fa-solid fa-camera"></i>
                                     <span>Take Photo</span>
-                                </button>
+                                </label>
                             </div>
                         </div>
                         
@@ -238,7 +240,13 @@
                 <!-- Homebox API Key -->
                 <div>
                     <label for="cfg-token" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Homebox API Key (hb_...)</label>
-                    <input type="password" id="cfg-token" placeholder="Leave empty to keep existing key" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                    <div class="relative">
+                        <input type="password" id="cfg-token" placeholder="Leave empty to keep existing key" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3 pr-10 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                        <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white transition-colors" onclick="togglePasswordVisibility('cfg-token')">
+                            <i class="fa-solid fa-eye" id="cfg-token-toggle"></i>
+                        </button>
+                    </div>
+                    <p id="cfg-token-status" class="text-[10px] mt-1"></p>
                 </div>
 
                 <!-- LLM Provider -->
@@ -253,20 +261,32 @@
                 <!-- Gemini API Key -->
                 <div>
                     <label for="cfg-gemini-key" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Gemini API Key</label>
-                    <input type="password" id="cfg-gemini-key" placeholder="Leave empty to keep existing key" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                    <div class="relative">
+                        <input type="password" id="cfg-gemini-key" placeholder="Leave empty to keep existing key" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3 pr-10 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                        <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white transition-colors" onclick="togglePasswordVisibility('cfg-gemini-key')">
+                            <i class="fa-solid fa-eye" id="cfg-gemini-key-toggle"></i>
+                        </button>
+                    </div>
+                    <p id="cfg-gemini-key-status" class="text-[10px] mt-1"></p>
                 </div>
 
                 <!-- Claude API Key -->
                 <div>
                     <label for="cfg-claude-key" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Claude API Key</label>
-                    <input type="password" id="cfg-claude-key" placeholder="Leave empty to keep existing key" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                    <div class="relative">
+                        <input type="password" id="cfg-claude-key" placeholder="Leave empty to keep existing key" class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-3 pr-10 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                        <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white transition-colors" onclick="togglePasswordVisibility('cfg-claude-key')">
+                            <i class="fa-solid fa-eye" id="cfg-claude-key-toggle"></i>
+                        </button>
+                    </div>
+                    <p id="cfg-claude-key-status" class="text-[10px] mt-1"></p>
                 </div>
 
                 <!-- Model configurations (Grid) -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="cfg-gemini-model" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Gemini Model</label>
-                        <input type="text" id="cfg-gemini-model" value="gemini-1.5-flash" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
+                        <input type="text" id="cfg-gemini-model" value="gemini-3.6-flash" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-indigo-500">
                     </div>
                     <div>
                         <label for="cfg-claude-model" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Claude Model</label>
@@ -295,6 +315,21 @@
 
     <!-- Scripts -->
     <script>
+        // Toggle password field visibility
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(inputId + '-toggle');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
         // DOM Elements
         const statusBadge = document.getElementById('status-badge');
         const statusDot = document.getElementById('status-dot');
@@ -386,6 +421,41 @@
             }
         }
 
+        // Helper to format flat locations into nested tree array
+        function formatNestedLocations(locList) {
+            const map = new Map();
+            const childrenMap = new Map();
+            const roots = [];
+
+            locList.forEach(loc => {
+                map.set(loc.id, loc);
+                if (loc.parent_id) {
+                    if (!childrenMap.has(loc.parent_id)) childrenMap.set(loc.parent_id, []);
+                    childrenMap.get(loc.parent_id).push(loc);
+                } else {
+                    roots.push(loc);
+                }
+            });
+
+            locList.forEach(loc => {
+                if (loc.parent_id && !map.has(loc.parent_id) && !roots.includes(loc)) {
+                    roots.push(loc);
+                }
+            });
+
+            const result = [];
+            function traverse(node, depth) {
+                result.push({ id: node.id, name: node.name, depth: depth });
+                const children = childrenMap.get(node.id) || [];
+                children.sort((a, b) => a.name.localeCompare(b.name));
+                children.forEach(child => traverse(child, depth + 1));
+            }
+
+            roots.sort((a, b) => a.name.localeCompare(b.name));
+            roots.forEach(root => traverse(root, 0));
+            return result;
+        }
+
         // Fetch Locations
         async function fetchLocations() {
             try {
@@ -400,10 +470,11 @@
                 itemTypes = data.item_types || [];
 
                 locationSelect.innerHTML = '<option value="">-- Choose Location --</option>';
-                locations.forEach(loc => {
+                const formattedLocs = formatNestedLocations(locations);
+                formattedLocs.forEach(loc => {
                     const opt = document.createElement('option');
                     opt.value = loc.id;
-                    opt.textContent = loc.name;
+                    opt.textContent = (loc.depth > 0 ? '\u00A0\u00A0'.repeat(loc.depth) + '└─ ' : '') + loc.name;
                     locationSelect.appendChild(opt);
                 });
 
@@ -459,19 +530,7 @@
                 refreshLocationsBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i>';
             });
 
-            // File select triggers
-            browseBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                fileInput.click();
-            });
-            cameraBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                cameraInput.click();
-            });
-            dropZone.addEventListener('click', () => {
-                if (!base64Image) fileInput.click();
-            });
-
+            // File select triggers handled natively by <label> tags
             fileInput.addEventListener('change', handleFileSelect);
             cameraInput.addEventListener('change', handleFileSelect);
 
@@ -513,15 +572,31 @@
             importBtn.addEventListener('click', importApprovedItems);
         }
 
+        function updateKeyStatus(elementId, key) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            if (key) {
+                el.textContent = `✓ Loaded (ends in: ...${key.slice(-4)})`;
+                el.className = "text-[10px] text-green-500 mt-1";
+            } else {
+                el.textContent = "✗ No key loaded";
+                el.className = "text-[10px] text-slate-500 mt-1";
+            }
+        }
+
         // Open Settings Modal & Prefill values
         function openSettings() {
             cfgUrl.value = backendConfig.homebox_url || '';
-            cfgToken.value = backendConfig.has_homebox_api_key ? '********' : '';
+            cfgToken.value = backendConfig.homebox_api_key || '';
             cfgProvider.value = backendConfig.llm_provider || 'gemini';
-            cfgGeminiKey.value = backendConfig.has_gemini_api_key ? '********' : '';
-            cfgClaudeKey.value = backendConfig.has_anthropic_api_key ? '********' : '';
-            cfgGeminiModel.value = backendConfig.gemini_model || 'gemini-1.5-flash';
+            cfgGeminiKey.value = backendConfig.gemini_api_key || '';
+            cfgClaudeKey.value = backendConfig.anthropic_api_key || '';
+            cfgGeminiModel.value = backendConfig.gemini_model || 'gemini-3.6-flash';
             cfgClaudeModel.value = backendConfig.claude_model || 'claude-3-5-sonnet-20240620';
+            
+            updateKeyStatus('cfg-token-status', backendConfig.homebox_api_key);
+            updateKeyStatus('cfg-gemini-key-status', backendConfig.gemini_api_key);
+            updateKeyStatus('cfg-claude-key-status', backendConfig.anthropic_api_key);
             
             settingsModal.classList.remove('hidden');
         }
@@ -576,44 +651,118 @@
         // File/Image processors
         function handleFileSelect(e) {
             const file = e.target.files[0];
-            if (file) processImage(file);
+            if (!file) return;
+
+            const fileName = file.name.toLowerCase();
+            const fileType = file.type.toLowerCase();
+
+            // Block HEIC / HEIF to prevent WebKit decoding crashes
+            if (fileName.endsWith('.heic') || fileName.endsWith('.heif') || fileType.includes('heic') || fileType.includes('heif')) {
+                alert("HEIC/HEIF images are not natively supported by browsers. Please convert the image to JPEG, PNG, or WebP first.");
+                e.target.value = '';
+                return;
+            }
+
+            // Ensure it is a supported web image format
+            const validExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.svg'];
+            const isValidExtension = validExtensions.some(ext => fileName.endsWith(ext));
+            const isValidType = fileType.startsWith('image/');
+
+            if (!isValidExtension && !isValidType) {
+                alert("Please select a valid image file (.jpg, .png, .webp).");
+                e.target.value = '';
+                return;
+            }
+
+            processImage(file);
         }
 
-        function processImage(file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
+        // Reads just the pixel dimensions of an image file.
+        // We load it into an <img> but never draw it, so the browser only has to parse
+        // the header — it doesn't need to decode all the pixels to tell us the size.
+        function readImageSize(file) {
+            return new Promise((resolve, reject) => {
+                const url = URL.createObjectURL(file);
                 const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    let width = img.width;
-                    let height = img.height;
-                    
-                    const max_dim = 1200;
-                    if (width > max_dim || height > max_dim) {
-                        if (width > height) {
-                            height = Math.round((height * max_dim) / width);
-                            width = max_dim;
-                        } else {
-                            width = Math.round((width * max_dim) / height);
-                            height = max_dim;
-                        }
-                    }
-                    
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    
-                    base64Image = canvas.toDataURL('image/jpeg', 0.85);
-                    
-                    imagePreview.src = base64Image;
-                    dropZonePrompt.classList.add('hidden');
-                    imagePreviewContainer.classList.remove('hidden');
-                    analyzeBtn.removeAttribute('disabled');
+                img.onload = () => {
+                    const size = { width: img.naturalWidth, height: img.naturalHeight };
+                    URL.revokeObjectURL(url);
+                    if (!size.width || !size.height) reject(new Error("Image reported zero dimensions"));
+                    else resolve(size);
                 };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
+                img.onerror = () => {
+                    URL.revokeObjectURL(url);
+                    reject(new Error("Browser could not read this image"));
+                };
+                img.src = url;
+            });
+        }
+
+        // Encodes a canvas to a JPEG data URL without blocking the UI.
+        // canvas.toDataURL() is synchronous — it builds the entire base64 string on the
+        // main thread. toBlob() hands the encode off, and FileReader converts it async.
+        function canvasToJpegDataUrl(canvas, quality) {
+            return new Promise((resolve, reject) => {
+                canvas.toBlob((blob) => {
+                    if (!blob) return reject(new Error("JPEG encoding failed"));
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = () => reject(reader.error);
+                    reader.readAsDataURL(blob);
+                }, 'image/jpeg', quality);
+            });
+        }
+
+        async function processImage(file) {
+            // No browser can decode HEIC/HEIF, so bail early with a clear message
+            const fileName = file.name.toLowerCase();
+            const fileType = file.type.toLowerCase();
+            if (fileName.endsWith('.heic') || fileName.endsWith('.heif') || fileType.includes('heic') || fileType.includes('heif')) {
+                alert("HEIC/HEIF images are not natively supported by your browser. Please convert the image to JPEG, PNG, or WebP first.");
+                return;
+            }
+
+            const MAX_DIM = 1200;
+
+            try {
+                // 1. Work out the target size from the header, before decoding anything.
+                const { width: srcW, height: srcH } = await readImageSize(file);
+
+                // Fit inside a MAX_DIM box, preserving aspect ratio. Capping scale at 1
+                // means we never upscale an image that's already small.
+                const scale = Math.min(1, MAX_DIM / Math.max(srcW, srcH));
+                const width = Math.max(1, Math.round(srcW * scale));
+                const height = Math.max(1, Math.round(srcH * scale));
+
+                // 2. Decode straight to the target size on a browser-managed thread.
+                //    The previous version decoded at full resolution on the main thread,
+                //    so a 48MP phone photo became a ~190MB bitmap and froze the tab.
+                const bitmap = await createImageBitmap(file, {
+                    resizeWidth: width,
+                    resizeHeight: height,
+                    resizeQuality: 'high'
+                });
+
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                // Passing width/height here means we still land on the right size even if
+                // the browser ignored the resize options above.
+                canvas.getContext('2d').drawImage(bitmap, 0, 0, width, height);
+                bitmap.close(); // free the bitmap now rather than waiting for GC
+
+                // 3. Encode async. The backend strips the "data:image/jpeg;base64," prefix.
+                base64Image = await canvasToJpegDataUrl(canvas, 0.85);
+
+                imagePreview.src = base64Image;
+                dropZonePrompt.classList.add('hidden');
+                imagePreviewContainer.classList.remove('hidden');
+                analyzeBtn.removeAttribute('disabled');
+            } catch (err) {
+                console.error("Failed to process image:", err);
+                alert("Could not read that image. Try a JPEG, PNG, or WebP.");
+                resetImage();
+            }
         }
 
         function resetImage() {
@@ -804,7 +953,9 @@
                     body: JSON.stringify({
                         location_id: locationId,
                         item_type_id: itemTypeId || null,
-                        items: items
+                        items: items,
+                        images_base64: base64Images || [],
+                        attach_photos: true
                     })
                 });
 
@@ -813,7 +964,8 @@
                 if (response.ok) {
                     alert(`Imported ${data.imported_count} items!`);
                     renderTable([]);
-                    resetImage();
+                    if (typeof resetImages === 'function') resetImages();
+                    else if (typeof resetImage === 'function') resetImage();
                 } else {
                     throw new Error(data.detail || 'Import failed');
                 }

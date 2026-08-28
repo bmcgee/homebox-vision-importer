@@ -66,22 +66,23 @@ Access the app on `http://<your-server-ip>:8082`.
 
 ---
 
-#### Option B: Python (Local Run)
+#### Option B: Python (Local Run with `uv` - Recommended)
 
 1. Clone or navigate to the directory.
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Copy `.env.example` to `.env` and fill in your keys:
+2. Copy `.env.example` to `.env` and fill in your keys:
    ```bash
    cp .env.example .env
    ```
-4. Start the application:
+3. Run the application with [`uv`](https://github.com/astral-sh/uv) (automatically creates virtual environment & installs dependencies):
    ```bash
+   uv run python app.py
+   ```
+   *(Or using standard `pip` / virtualenv)*:
+   ```bash
+   pip install -r requirements.txt
    python app.py
    ```
-5. Open your browser and navigate to `http://localhost:8000`.
+4. Open your browser and navigate to `http://localhost:8000`.
 
 ---
 
