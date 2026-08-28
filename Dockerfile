@@ -2,9 +2,9 @@
 FROM node:20-slim AS frontend-builder
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
-RUN npm ci
+RUN npm install --include=dev
 COPY frontend/ ./
-RUN npm run build
+RUN npx vite build
 
 # Stage 2: Production Python FastAPI Backend
 FROM python:3.12-slim
