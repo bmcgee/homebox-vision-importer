@@ -2,10 +2,10 @@
 FROM node:20-slim AS frontend-builder
 WORKDIR /app/frontend
 ENV NODE_ENV=development
-COPY frontend/package*.json ./
+COPY frontend/package.json ./
 RUN npm install
 COPY frontend/ ./
-RUN npm run build
+RUN ./node_modules/.bin/vite build
 
 # Stage 2: Production Python FastAPI Backend
 FROM python:3.12-slim
