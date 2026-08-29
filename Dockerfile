@@ -1,10 +1,11 @@
 # Stage 1: Build Mobile-First Svelte Frontend
 FROM node:20-slim AS frontend-builder
 WORKDIR /app/frontend
+ENV NODE_ENV=development
 COPY frontend/package*.json ./
-RUN npm install --include=dev
+RUN npm install
 COPY frontend/ ./
-RUN npx vite build
+RUN npm run build
 
 # Stage 2: Production Python FastAPI Backend
 FROM python:3.12-slim
