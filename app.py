@@ -152,16 +152,43 @@ def extract_list_from_response(data, possible_keys):
                 return v
     return []
 
-# Helper: Auto-detect Homebox API Version
+# Helper: Auto-detect Homebox API Version with automatic URL recovery
 def detect_homebox_version() -> str:
-    url = get_homebox_url("api/v1/entity-types")
     headers = get_homebox_headers()
-    try:
-        r = requests.get(url, headers=headers, timeout=5)
-        if r.status_code == 200:
-            return "modern"
-    except Exception as e:
-        logger.warning(f"Error checking version, falling back to legacy: {e}")
+    
+    # Candidate URLs to attempt connection
+    candidate_urls = [config["homebox_url"]]
+    curr_url = config["homebox_url"].rstrip("/")
+    
+    # Auto-add fallback localhost / loopback URLs if current URL uses hostname or host.docker.internal
+    if "127.0.0.1" not in curr_url and "localhost" not in curr_url:
+        port = "7745"
+        if ":" in curr_url.replace("://", ""):
+            port = curr_url.split(":")[-1].split("/")[0]
+        candidate_urls.append(f"http://127.0.0.1:{port}")
+        candidate_urls.append(f"http://localhost:{port}")
+
+    for base_url in candidate_urls:
+        if not base_url:
+            continue
+        test_url = f"{base_url.rstrip('/')}/api/v1/entity-types"
+        try:
+            r = requests.get(test_url, headers=headers, timeout=4)
+            if r.status_code == 200:
+                if base_url != config["homebox_url"]:
+                    logger.info(f"Auto-recovered unreachable Homebox URL from '{config['homebox_url']}' to '{base_url}'")
+                    config["homebox_url"] = base_url
+                    save_config_to_file()
+                return "modern"
+            elif r.status_code == 404:
+                # Modern API not present, could be legacy
+                if base_url != config["homebox_url"]:
+                    config["homebox_url"] = base_url
+                    save_config_to_file()
+                return "legacy"
+        except Exception as e:
+            logger.warning(f"Failed connecting to Homebox at '{base_url}': {e}")
+            
     return "legacy"
 
 # Request/Response Models
@@ -342,7 +369,7 @@ async def get_locations():
                             })
         except Exception as e:
             logger.error(f"Error fetching entities: {e}")
-            raise HTTPException(status_code=500, detail=f"Failed to fetch entities: {e}")
+            raise HTTPException(status_code=400, detail=f"Could not connect to Homebox at '{config['homebox_url']}'. Please click the gear icon ⚙️ in the top right to verify your Homebox URL and API key.")
             
     else:
         # Legacy Mode (v0.25 and older)
@@ -359,7 +386,7 @@ async def get_locations():
                 })
         except Exception as e:
             logger.error(f"Error fetching legacy locations: {e}")
-            raise HTTPException(status_code=500, detail=f"Failed to fetch legacy locations: {e}")
+            raise HTTPException(status_code=400, detail=f"Could not connect to Homebox at '{config['homebox_url']}'. Please click the gear icon ⚙️ in the top right to verify your Homebox URL and API key.")
             
     return {
         "version": version,
